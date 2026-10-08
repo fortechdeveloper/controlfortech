@@ -2,294 +2,1234 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0b0f" />
 <title>Fortech Panel</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0d1117;
-    color: #e6edf3;
-    min-height: 100vh;
-  }
-  .hidden { display: none !important; }
+/* =============================================================
+   RESET
+   ============================================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* LOGIN */
-  #loginView {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  .login-card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    padding: 40px 32px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.4);
-  }
-  .login-card h1 {
-    font-size: 22px;
-    margin-bottom: 6px;
-    color: #58a6ff;
-  }
-  .login-card p.sub {
-    font-size: 13px;
-    color: #8b949e;
-    margin-bottom: 24px;
-  }
-  .login-card label {
-    display: block;
-    font-size: 13px;
-    color: #8b949e;
-    margin-bottom: 6px;
-  }
-  .login-card input {
-    width: 100%;
-    padding: 10px 12px;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    color: #e6edf3;
-    font-size: 14px;
-    margin-bottom: 16px;
-    outline: none;
-  }
-  .login-card input:focus { border-color: #58a6ff; }
-  .login-card button {
-    width: 100%;
-    padding: 11px;
-    background: #238636;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .login-card button:hover { background: #2ea043; }
-  .login-card button:disabled { opacity: .6; cursor: not-allowed; }
-  .err {
-    color: #f85149;
-    font-size: 13px;
-    margin-top: 12px;
-    min-height: 18px;
-  }
+:root {
+  --bg: #0a0b0f;
+  --bg-2: #0f1117;
+  --surface: #14171e;
+  --surface-2: #1a1e27;
+  --line: #232833;
+  --line-soft: #1a1e27;
+  --text: #e8eaf0;
+  --text-soft: #9aa2b2;
+  --text-mute: #5a6274;
+  --accent: #4dd0e1;
+  --accent-2: #7c9fff;
+  --accent-3: #b788ff;
+  --success: #2ea043;
+  --danger: #f85149;
+  --warning: #f0883e;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
 
-  /* PANEL */
-  #panelView { display: flex; flex-direction: column; height: 100vh; }
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overscroll-behavior: none;
+}
 
-  header.topbar {
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hidden { display: none !important; }
+
+svg.lucide,
+i.lucide {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+/* =============================================================
+   BACKGROUND
+   ============================================================= */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 45% at 20% 0%, rgba(77, 208, 225, 0.06), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 100% 100%, rgba(124, 159, 255, 0.05), transparent 60%);
+}
+
+/* =============================================================
+   LOGIN
+   ============================================================= */
+#loginView {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 20px;
+  padding-top: calc(20px + var(--safe-top));
+  padding-bottom: calc(20px + var(--safe-bottom));
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 36px 26px 28px;
+  box-shadow: var(--shadow-lg);
+  animation: cardIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  color: #0a0b0f;
+  box-shadow: 0 8px 24px rgba(77, 208, 225, 0.35);
+}
+
+.login-logo svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.4;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.login-sub {
+  font-size: 13px;
+  color: var(--text-mute);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap svg.icon-left {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-mute);
+  pointer-events: none;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 12px 14px 12px 38px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.input-wrap input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.12);
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px;
+  border-radius: 6px;
+  color: var(--text-mute);
+  transition: color 0.15s, background 0.15s;
+}
+
+.toggle-pass:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0a0b0f;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(77, 208, 225, 0.25);
+}
+
+.btn-login:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(77, 208, 225, 0.4);
+}
+
+.btn-login:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-login:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.login-err {
+  min-height: 18px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--danger);
+  text-align: center;
+}
+
+/* =============================================================
+   APP LAYOUT
+   ============================================================= */
+#panelView {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* HEADER */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  padding-top: calc(12px + var(--safe-top));
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0b0f;
+}
+
+.brand-icon svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.5;
+}
+
+.brand-text {
+  background: linear-gradient(100deg, var(--accent), var(--accent-2), var(--accent-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-chip {
+  display: none;
+  font-size: 12px;
+  color: var(--text-soft);
+  padding: 5px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+@media (min-width: 500px) {
+  .user-chip { display: inline-block; }
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-soft);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.icon-btn.danger:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* TABS */
+.tab-bar {
+  display: flex;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  padding: 0 12px;
+  flex-shrink: 0;
+  gap: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mute);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  position: relative;
+  top: 1px;
+}
+
+.tab-btn:hover { color: var(--text-soft); }
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tab-panel {
+  flex: 1;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+}
+
+.tab-panel.active { display: flex; }
+
+/* =============================================================
+   FILES PANEL
+   ============================================================= */
+.files-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (min-width: 800px) {
+  .files-layout {
+    flex-direction: row;
+  }
+}
+
+.file-sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  max-height: 45%;
+}
+
+@media (min-width: 800px) {
+  .file-sidebar {
+    width: 300px;
+    max-height: none;
+    border-bottom: none;
+    border-right: 1px solid var(--line);
     flex-shrink: 0;
   }
-  header.topbar h1 {
-    font-size: 16px;
-    color: #58a6ff;
-    font-weight: 700;
-  }
-  header.topbar .user {
-    font-size: 13px;
-    color: #8b949e;
-    margin-right: 12px;
-  }
-  .btn {
-    padding: 6px 12px;
-    background: #21262d;
-    border: 1px solid #30363d;
-    color: #e6edf3;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-  .btn:hover { background: #30363d; }
-  .btn.primary { background: #238636; border-color: #238636; }
-  .btn.primary:hover { background: #2ea043; }
-  .btn.danger { background: #da3633; border-color: #da3633; }
-  .btn.danger:hover { background: #f85149; }
-  .btn.ghost { background: transparent; }
+}
 
-  .layout {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
+.sidebar-head {
+  padding: 10px 12px;
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
 
-  aside.sidebar {
-    width: 280px;
-    background: #0d1117;
-    border-right: 1px solid #30363d;
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-  aside.sidebar .sidebar-head {
-    padding: 10px 12px;
-    border-bottom: 1px solid #30363d;
-    display: flex;
-    gap: 6px;
-  }
-  aside.sidebar .sidebar-head .btn { font-size: 12px; padding: 5px 8px; }
-  .filelist { padding: 6px; }
-  .fileitem {
-    padding: 7px 10px;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #c9d1d9;
-    word-break: break-all;
-  }
-  .fileitem:hover { background: #161b22; }
-  .fileitem.active { background: #1f6feb; color: white; }
-  .fileitem .icon { flex-shrink: 0; }
+.btn-mini {
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
 
-  main.editor {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .editor-head {
-    padding: 10px 16px;
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-  .editor-head .path {
-    font-size: 13px;
-    color: #8b949e;
-    font-family: monospace;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .editor-head .actions { display: flex; gap: 6px; }
-  textarea#editor {
-    flex: 1;
-    width: 100%;
-    background: #0d1117;
-    color: #e6edf3;
-    border: none;
-    outline: none;
-    padding: 16px;
-    font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
-    font-size: 13px;
-    line-height: 1.6;
-    resize: none;
-  }
-  .empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #8b949e;
-    font-size: 14px;
-    text-align: center;
-    padding: 20px;
-  }
+.btn-mini:hover {
+  color: var(--text);
+  border-color: var(--text-mute);
+}
 
-  #toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #161b22;
-    border: 1px solid #30363d;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    transform: translateY(100px);
-    transition: transform .3s, opacity .3s;
-    opacity: 0;
-    z-index: 999;
-    max-width: 320px;
-  }
-  #toast.show { transform: translateY(0); opacity: 1; }
-  #toast.success { border-color: #238636; }
-  #toast.error { border-color: #da3633; }
+.btn-mini svg {
+  width: 14px;
+  height: 14px;
+}
 
-  .spinner {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #30363d;
-    border-top-color: #58a6ff;
-    border-radius: 50%;
-    animation: spin .6s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.btn-mini.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0a0b0f;
+  border-color: transparent;
+}
 
-  @media (max-width: 720px) {
-    aside.sidebar { width: 200px; }
+.btn-mini.primary:hover {
+  box-shadow: 0 4px 12px rgba(77, 208, 225, 0.3);
+}
+
+.btn-mini.grow {
+  flex: 1;
+}
+
+.file-list {
+  overflow-y: auto;
+  padding: 6px;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.12s;
+  word-break: break-all;
+}
+
+.file-item:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.file-item.active {
+  background: linear-gradient(135deg, rgba(77, 208, 225, 0.15), rgba(124, 159, 255, 0.15));
+  color: var(--accent);
+  border: 1px solid rgba(77, 208, 225, 0.25);
+  padding: 9px 11px;
+}
+
+.file-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.file-item .fname {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-state {
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-state svg {
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
+}
+
+/* EDITOR */
+.editor-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-head {
+  padding: 10px 14px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.path-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 6px;
+}
+
+textarea#editor {
+  flex: 1;
+  width: 100%;
+  background: var(--bg);
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  resize: none;
+  color: var(--text);
+  -webkit-overflow-scrolling: touch;
+  border: none;
+}
+
+textarea#editor::placeholder {
+  color: var(--text-mute);
+}
+
+/* =============================================================
+   MAINTENANCE PANEL
+   ============================================================= */
+.maint-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: calc(20px + var(--safe-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.maint-container {
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon.warning {
+  background: rgba(240, 136, 62, 0.14);
+  color: var(--warning);
+}
+
+.card-icon.info {
+  background: rgba(77, 208, 225, 0.14);
+  color: var(--accent);
+}
+
+.card-icon.success {
+  background: rgba(46, 160, 67, 0.14);
+  color: var(--success);
+}
+
+.card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.card h2 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.card p {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+.field-inline {
+  margin-top: 16px;
+}
+
+.field-inline label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+.field-inline input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.field-inline input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(77, 208, 225, 0.12);
+}
+
+/* BIG MAINTENANCE BUTTON */
+.huge-btn {
+  width: 100%;
+  padding: 26px 20px;
+  margin-top: 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #f0883e, #e05d2a);
+  color: white;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow:
+    0 8px 28px rgba(240, 136, 62, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform 0.12s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.huge-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shine 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0%, 100% { background-position: 200% 0; }
+  50%      { background-position: -100% 0; }
+}
+
+.huge-btn:hover:not(:disabled) {
+  box-shadow:
+    0 12px 36px rgba(240, 136, 62, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.huge-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.huge-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.huge-btn svg {
+  width: 34px;
+  height: 34px;
+  stroke-width: 2.2;
+}
+
+.huge-btn .sub {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.85;
+  letter-spacing: 0.5px;
+  text-transform: none;
+}
+
+/* RESTORE BUTTON */
+.restore-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s;
+}
+
+.restore-btn:hover:not(:disabled) {
+  color: var(--success);
+  border-color: var(--success);
+  background: rgba(46, 160, 67, 0.08);
+}
+
+.restore-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.restore-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.restore-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* STATUS */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(46, 160, 67, 0.12);
+  color: var(--success);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 12px;
+}
+
+.status-pill.offline {
+  background: rgba(248, 81, 73, 0.12);
+  color: var(--danger);
+}
+
+.status-pill svg {
+  width: 12px;
+  height: 12px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* =============================================================
+   MODAL / CONFIRM
+   ============================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(5, 6, 9, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  animation: cardIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.modal-icon.warning {
+  background: rgba(240, 136, 62, 0.15);
+  color: var(--warning);
+}
+
+.modal-icon.danger {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--danger);
+}
+
+.modal-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.modal h3 {
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.modal p {
+  font-size: 13px;
+  color: var(--text-soft);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.modal-btn.cancel {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+}
+
+.modal-btn.cancel:hover {
+  color: var(--text);
+  border-color: var(--text-mute);
+}
+
+.modal-btn.confirm {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0a0b0f;
+}
+
+.modal-btn.confirm.danger {
+  background: linear-gradient(135deg, #f85149, #da3633);
+  color: white;
+}
+
+.modal-btn:active {
+  transform: scale(0.97);
+}
+
+/* =============================================================
+   TOAST
+   ============================================================= */
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(20px + var(--safe-bottom));
+  transform: translateX(-50%) translateY(120%);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s;
+  max-width: calc(100vw - 40px);
+  pointer-events: none;
+}
+
+#toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+#toast svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+#toast.success { border-color: rgba(46, 160, 67, 0.5); color: var(--text); }
+#toast.success svg { color: var(--success); }
+#toast.error { border-color: rgba(248, 81, 73, 0.5); color: var(--text); }
+#toast.error svg { color: var(--danger); }
+#toast.info { border-color: rgba(77, 208, 225, 0.5); color: var(--text); }
+#toast.info svg { color: var(--accent); }
+
+/* SPINNER */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.hidden-desktop { display: block; }
+@media (min-width: 800px) {
+  .hidden-desktop { display: none; }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
+}
 </style>
 </head>
 <body>
 
+<div class="bg-glow"></div>
+
 <!-- ============ LOGIN ============ -->
 <div id="loginView">
-  <form class="login-card" id="loginForm">
-    <h1>Fortech Panel</h1>
-    <p class="sub">Masuk untuk mengelola repository</p>
+  <form class="login-card" id="loginForm" autocomplete="on">
+    <div class="login-logo">
+      <i data-lucide="zap"></i>
+    </div>
+    <h1 class="login-title">Fortech Panel</h1>
+    <p class="login-sub">Masuk untuk mengelola repository</p>
 
-    <label for="username">Username</label>
-    <input id="username" type="text" autocomplete="username" required />
+    <div class="field">
+      <label class="field-label" for="username">Username</label>
+      <div class="input-wrap">
+        <i data-lucide="user" class="icon-left"></i>
+        <input id="username" type="text" autocomplete="username" spellcheck="false" required />
+      </div>
+    </div>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" autocomplete="current-password" required />
+    <div class="field">
+      <label class="field-label" for="password">Password</label>
+      <div class="input-wrap">
+        <i data-lucide="lock" class="icon-left"></i>
+        <input id="password" type="password" autocomplete="current-password" required />
+        <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan password">
+          <i data-lucide="eye"></i>
+        </button>
+      </div>
+    </div>
 
-    <button type="submit" id="loginBtn">Masuk</button>
-    <div class="err" id="loginErr"></div>
+    <button type="submit" class="btn-login" id="loginBtn">
+      <i data-lucide="log-in"></i>
+      <span>Masuk</span>
+    </button>
+
+    <div class="login-err" id="loginErr"></div>
   </form>
 </div>
 
 <!-- ============ PANEL ============ -->
 <div id="panelView" class="hidden">
-  <header class="topbar">
-    <h1>⚡ Fortech Panel</h1>
-    <div style="display:flex;align-items:center">
-      <span class="user" id="userLabel"></span>
-      <button class="btn" id="logoutBtn">Logout</button>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon"><i data-lucide="zap"></i></div>
+      <span class="brand-text">Fortech</span>
+    </div>
+
+    <div class="user-area">
+      <span class="user-chip" id="userLabel"></span>
+      <button class="icon-btn danger" id="logoutBtn" title="Logout">
+        <i data-lucide="log-out"></i>
+      </button>
     </div>
   </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-head">
-        <button class="btn ghost" id="backBtn" title="Kembali">⬅</button>
-        <button class="btn ghost" id="refreshBtn" title="Refresh">↻</button>
-        <button class="btn primary" id="newBtn" style="flex:1">+ File</button>
-      </div>
-      <div class="filelist" id="fileList">
-        <div class="empty">Memuat...</div>
-      </div>
-    </aside>
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="files">
+      <i data-lucide="folder-tree"></i>
+      <span>Files</span>
+    </button>
+    <button class="tab-btn" data-tab="maintenance">
+      <i data-lucide="wrench"></i>
+      <span>Maintenance</span>
+    </button>
+  </nav>
 
-    <main class="editor">
-      <div class="editor-head">
-        <div class="path" id="currentPath">Tidak ada file dipilih</div>
-        <div class="actions">
-          <button class="btn danger" id="deleteBtn" disabled>Hapus</button>
-          <button class="btn primary" id="saveBtn" disabled>Simpan</button>
+  <!-- FILES TAB -->
+  <section class="tab-panel active" id="filesTab">
+    <div class="files-layout">
+      <aside class="file-sidebar">
+        <div class="sidebar-head">
+          <button class="btn-mini" id="backBtn" title="Kembali">
+            <i data-lucide="arrow-left"></i>
+          </button>
+          <button class="btn-mini" id="refreshBtn" title="Refresh">
+            <i data-lucide="refresh-cw"></i>
+          </button>
+          <button class="btn-mini primary grow" id="newBtn">
+            <i data-lucide="file-plus"></i>
+            <span>Baru</span>
+          </button>
         </div>
+        <div class="file-list" id="fileList">
+          <div class="empty-state">
+            <div class="spinner"></div>
+            <span>Memuat...</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="editor-panel">
+        <div class="editor-head">
+          <span class="path-label" id="currentPath">Tidak ada file dipilih</span>
+          <div class="editor-actions">
+            <button class="btn-mini danger" id="deleteBtn" disabled>
+              <i data-lucide="trash-2"></i>
+            </button>
+            <button class="btn-mini primary" id="saveBtn" disabled>
+              <i data-lucide="save"></i>
+              <span>Simpan</span>
+            </button>
+          </div>
+        </div>
+        <textarea id="editor" spellcheck="false" placeholder="Pilih file dari daftar, atau buat file baru..."></textarea>
+      </main>
+    </div>
+  </section>
+
+  <!-- MAINTENANCE TAB -->
+  <section class="tab-panel" id="maintenanceTab">
+    <div class="maint-wrap">
+      <div class="maint-container">
+
+        <!-- STATUS CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon info">
+              <i data-lucide="activity"></i>
+            </div>
+            <div>
+              <h2>Status Sistem</h2>
+              <p id="statusText">Memeriksa...</p>
+            </div>
+          </div>
+          <div class="status-pill" id="statusPill">
+            <span class="status-dot"></span>
+            <span>Checking</span>
+          </div>
+        </div>
+
+        <!-- MAINTENANCE CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon warning">
+              <i data-lucide="alert-triangle"></i>
+            </div>
+            <div>
+              <h2>Mode Maintenance</h2>
+              <p>Ganti file website dengan halaman maintenance.</p>
+            </div>
+          </div>
+
+          <div class="field-inline">
+            <label for="targetPath">Target File</label>
+            <input id="targetPath" type="text" value="index.html" spellcheck="false" />
+          </div>
+
+          <button class="huge-btn" id="maintenanceBtn">
+            <i data-lucide="power"></i>
+            <span>AKTIFKAN MAINTENANCE</span>
+            <span class="sub">File lama akan di-backup otomatis</span>
+          </button>
+
+          <button class="restore-btn" id="restoreBtn">
+            <i data-lucide="rotate-ccw"></i>
+            <span>Restore dari Backup</span>
+          </button>
+        </div>
+
+        <!-- INFO CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon success">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div>
+              <h2>Info Backup</h2>
+              <p>File backup disimpan di: <code id="backupPathLabel">index.backup.html</code></p>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <textarea id="editor" spellcheck="false" placeholder="Pilih file dari kiri, atau buat file baru..."></textarea>
-    </main>
-  </div>
+    </div>
+  </section>
 </div>
 
 <div id="toast"></div>
@@ -308,6 +1248,7 @@
     loginErr: document.getElementById('loginErr'),
     username: document.getElementById('username'),
     password: document.getElementById('password'),
+    togglePass: document.getElementById('togglePass'),
     userLabel: document.getElementById('userLabel'),
     logoutBtn: document.getElementById('logoutBtn'),
     backBtn: document.getElementById('backBtn'),
@@ -318,7 +1259,16 @@
     editor: document.getElementById('editor'),
     saveBtn: document.getElementById('saveBtn'),
     deleteBtn: document.getElementById('deleteBtn'),
-    toast: document.getElementById('toast')
+    toast: document.getElementById('toast'),
+    maintenanceBtn: document.getElementById('maintenanceBtn'),
+    restoreBtn: document.getElementById('restoreBtn'),
+    targetPath: document.getElementById('targetPath'),
+    statusText: document.getElementById('statusText'),
+    statusPill: document.getElementById('statusPill'),
+    backupPathLabel: document.getElementById('backupPathLabel'),
+    tabBtns: document.querySelectorAll('.tab-btn'),
+    filesTab: document.getElementById('filesTab'),
+    maintenanceTab: document.getElementById('maintenanceTab')
   };
 
   const state = {
@@ -329,14 +1279,46 @@
     items: []
   };
 
-  // ============ HELPER ============
+  // ============================================================
+  // UTILS
+  // ============================================================
+  function refreshIcons() {
+    if (window.lucide && window.lucide.createIcons) {
+      try { window.lucide.createIcons(); } catch (e) {}
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function iconFor(name) {
+    if (name === 'dir') return 'folder';
+    if (/\.(html?|htm)$/i.test(name)) return 'file-code-2';
+    if (/\.(js|mjs|cjs)$/i.test(name)) return 'file-code-2';
+    if (/\.(ts|tsx|jsx)$/i.test(name)) return 'file-code-2';
+    if (/\.(css|scss|sass|less)$/i.test(name)) return 'palette';
+    if (/\.(json|yml|yaml|toml|ini|env)$/i.test(name)) return 'settings';
+    if (/\.(md|mdx|txt)$/i.test(name)) return 'file-text';
+    if (/\.(png|jpe?g|gif|svg|webp|ico|bmp)$/i.test(name)) return 'image';
+    if (/\.(mp4|mov|webm|avi|mkv)$/i.test(name)) return 'video';
+    if (/\.(mp3|wav|ogg|m4a|flac)$/i.test(name)) return 'music';
+    if (/\.(zip|rar|7z|tar|gz)$/i.test(name)) return 'archive';
+    if (/\.(pdf)$/i.test(name)) return 'file-text';
+    return 'file';
+  }
+
   function toast(msg, type) {
-    el.toast.textContent = msg;
-    el.toast.className = 'show ' + (type || '');
+    const iconName = type === 'error' ? 'alert-circle' : type === 'info' ? 'info' : 'check-circle';
+    el.toast.innerHTML = '<i data-lucide="' + iconName + '"></i><span>' + escapeHtml(msg) + '</span>';
+    el.toast.className = 'show ' + (type || 'success');
+    refreshIcons();
     clearTimeout(toast._t);
     toast._t = setTimeout(function () {
       el.toast.className = '';
-    }, 2600);
+    }, 3000);
   }
 
   async function api(action, extra) {
@@ -357,12 +1339,58 @@
     return data;
   }
 
-  // ============ LOGIN ============
+  // ============================================================
+  // MODAL
+  // ============================================================
+  function confirmModal(opts) {
+    return new Promise(function (resolve) {
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      const iconName = opts.icon || 'alert-triangle';
+      const iconClass = opts.danger ? 'danger' : 'warning';
+      const btnClass = opts.danger ? 'modal-btn confirm danger' : 'modal-btn confirm';
+      overlay.innerHTML =
+        '<div class="modal">' +
+        '  <div class="modal-icon ' + iconClass + '"><i data-lucide="' + iconName + '"></i></div>' +
+        '  <h3>' + escapeHtml(opts.title || 'Konfirmasi') + '</h3>' +
+        '  <p>' + (opts.message || '') + '</p>' +
+        '  <div class="modal-actions">' +
+        '    <button class="modal-btn cancel" data-act="cancel">' + escapeHtml(opts.cancelText || 'Batal') + '</button>' +
+        '    <button class="' + btnClass + '" data-act="ok">' + escapeHtml(opts.okText || 'Lanjut') + '</button>' +
+        '  </div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      refreshIcons();
+
+      function close(val) {
+        overlay.remove();
+        resolve(val);
+      }
+
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) close(false);
+        const btn = e.target.closest('[data-act]');
+        if (!btn) return;
+        close(btn.dataset.act === 'ok');
+      });
+    });
+  }
+
+  // ============================================================
+  // LOGIN
+  // ============================================================
+  el.togglePass.addEventListener('click', function () {
+    const isPass = el.password.type === 'password';
+    el.password.type = isPass ? 'text' : 'password';
+    el.togglePass.innerHTML = '<i data-lucide="' + (isPass ? 'eye-off' : 'eye') + '"></i>';
+    refreshIcons();
+  });
+
   el.loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     el.loginErr.textContent = '';
     el.loginBtn.disabled = true;
-    el.loginBtn.textContent = 'Memproses...';
+    el.loginBtn.innerHTML = '<div class="spinner"></div><span>Memproses...</span>';
 
     const r = await api('login', {
       username: el.username.value,
@@ -370,7 +1398,8 @@
     });
 
     el.loginBtn.disabled = false;
-    el.loginBtn.textContent = 'Masuk';
+    el.loginBtn.innerHTML = '<i data-lucide="log-in"></i><span>Masuk</span>';
+    refreshIcons();
 
     if (r.ok) {
       state.user = el.username.value;
@@ -380,8 +1409,16 @@
     }
   });
 
-  // ============ LOGOUT ============
   el.logoutBtn.addEventListener('click', async function () {
+    const ok = await confirmModal({
+      title: 'Logout',
+      message: 'Yakin mau keluar dari panel?',
+      icon: 'log-out',
+      okText: 'Logout',
+      danger: false
+    });
+    if (!ok) return;
+
     await api('logout');
     state.user = null;
     state.currentFile = null;
@@ -393,13 +1430,13 @@
     el.password.value = '';
   });
 
-  // ============ CHECK SESSION ON LOAD ============
-  (async function () {
+  (async function initSession() {
     const r = await api('check');
     if (r.ok && r.loggedIn) {
       state.user = r.user;
       showPanel();
     }
+    refreshIcons();
   })();
 
   function showPanel() {
@@ -407,16 +1444,45 @@
     el.panelView.classList.remove('hidden');
     el.userLabel.textContent = state.user || '';
     loadList('');
+    updateStatus();
+    refreshIcons();
   }
 
-  // ============ LOAD FILE LIST ============
+  // ============================================================
+  // TABS
+  // ============================================================
+  el.tabBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      el.tabBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+
+      const tab = btn.dataset.tab;
+      el.filesTab.classList.remove('active');
+      el.maintenanceTab.classList.remove('active');
+      if (tab === 'files') el.filesTab.classList.add('active');
+      if (tab === 'maintenance') {
+        el.maintenanceTab.classList.add('active');
+        updateStatus();
+      }
+      refreshIcons();
+    });
+  });
+
+  // ============================================================
+  // FILE LIST
+  // ============================================================
   async function loadList(dir) {
     state.currentDir = dir || '';
-    el.fileList.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
+    el.fileList.innerHTML =
+      '<div class="empty-state"><div class="spinner"></div><span>Memuat...</span></div>';
+
     const r = await api('list', { path: state.currentDir });
 
     if (!r.ok) {
-      el.fileList.innerHTML = '<div class="empty">Gagal memuat: ' + (r.error || '') + '</div>';
+      el.fileList.innerHTML =
+        '<div class="empty-state"><i data-lucide="alert-circle"></i><span>Gagal memuat: ' +
+        escapeHtml(r.error || '') + '</span></div>';
+      refreshIcons();
       return;
     }
 
@@ -434,8 +1500,8 @@
 
     if (state.currentDir) {
       const up = document.createElement('div');
-      up.className = 'fileitem';
-      up.innerHTML = '<span class="icon">↩</span><span>..</span>';
+      up.className = 'file-item';
+      up.innerHTML = '<i data-lucide="corner-left-up"></i><span class="fname">..</span>';
       up.addEventListener('click', function () {
         const parts = state.currentDir.split('/').filter(Boolean);
         parts.pop();
@@ -445,15 +1511,26 @@
     }
 
     if (items.length === 0 && !state.currentDir) {
-      el.fileList.innerHTML = '<div class="empty">Folder kosong</div>';
+      el.fileList.innerHTML =
+        '<div class="empty-state"><i data-lucide="folder-open"></i><span>Repo kosong</span></div>';
+      refreshIcons();
+      return;
+    }
+
+    if (items.length === 0) {
+      el.fileList.innerHTML =
+        '<div class="empty-state"><i data-lucide="folder-open"></i><span>Folder kosong</span></div>';
+      refreshIcons();
       return;
     }
 
     items.forEach(function (item) {
       const div = document.createElement('div');
-      div.className = 'fileitem';
-      const icon = item.type === 'dir' ? '📁' : '📄';
-      div.innerHTML = '<span class="icon">' + icon + '</span><span>' + escapeHtml(item.name) + '</span>';
+      div.className = 'file-item';
+      const iconName = item.type === 'dir' ? 'folder' : iconFor(item.name);
+      div.innerHTML =
+        '<i data-lucide="' + iconName + '"></i>' +
+        '<span class="fname">' + escapeHtml(item.name) + '</span>';
 
       if (state.currentFile === item.path) div.classList.add('active');
 
@@ -467,21 +1544,22 @@
 
       el.fileList.appendChild(div);
     });
+
+    refreshIcons();
   }
 
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
-
-  // ============ OPEN FILE ============
+  // ============================================================
+  // OPEN FILE
+  // ============================================================
   async function openFile(path) {
     el.editor.value = '';
     el.editor.placeholder = 'Memuat...';
     el.currentPath.textContent = path;
+    el.saveBtn.disabled = true;
+    el.deleteBtn.disabled = true;
+
     const r = await api('read', { path: path });
-    el.editor.placeholder = 'Pilih file dari kiri, atau buat file baru...';
+    el.editor.placeholder = 'Pilih file dari daftar, atau buat file baru...';
 
     if (!r.ok) {
       toast('Gagal buka: ' + (r.error || ''), 'error');
@@ -495,13 +1573,18 @@
     el.saveBtn.disabled = false;
     el.deleteBtn.disabled = false;
     renderList();
+
+    // Auto scroll editor ke atas
+    el.editor.scrollTop = 0;
   }
 
-  // ============ SAVE FILE ============
+  // ============================================================
+  // SAVE FILE
+  // ============================================================
   el.saveBtn.addEventListener('click', async function () {
     if (!state.currentFile) return;
     el.saveBtn.disabled = true;
-    el.saveBtn.textContent = 'Menyimpan...';
+    el.saveBtn.innerHTML = '<div class="spinner"></div>';
 
     const r = await api('write', {
       path: state.currentFile,
@@ -509,27 +1592,38 @@
     });
 
     el.saveBtn.disabled = false;
-    el.saveBtn.textContent = 'Simpan';
+    el.saveBtn.innerHTML = '<i data-lucide="save"></i><span>Simpan</span>';
+    refreshIcons();
 
     if (r.ok) {
-      toast('Tersimpan ✓', 'success');
+      toast('Tersimpan', 'success');
       loadList(state.currentDir);
     } else {
       toast('Gagal simpan: ' + (r.error || ''), 'error');
     }
   });
 
-  // ============ DELETE FILE ============
+  // ============================================================
+  // DELETE FILE
+  // ============================================================
   el.deleteBtn.addEventListener('click', async function () {
     if (!state.currentFile) return;
-    if (!confirm('Yakin hapus file "' + state.currentFile + '"?')) return;
+
+    const ok = await confirmModal({
+      title: 'Hapus File',
+      message: 'Yakin hapus <b>' + escapeHtml(state.currentFile) + '</b>? Aksi ini tidak bisa dibatalkan.',
+      icon: 'trash-2',
+      okText: 'Hapus',
+      danger: true
+    });
+    if (!ok) return;
 
     el.deleteBtn.disabled = true;
     const r = await api('delete', { path: state.currentFile });
     el.deleteBtn.disabled = false;
 
     if (r.ok) {
-      toast('Terhapus ✓', 'success');
+      toast('File terhapus', 'success');
       state.currentFile = null;
       state.currentSha = null;
       el.editor.value = '';
@@ -542,13 +1636,32 @@
     }
   });
 
-  // ============ NEW FILE ============
-  el.newBtn.addEventListener('click', function () {
+  // ============================================================
+  // NEW FILE
+  // ============================================================
+  el.newBtn.addEventListener('click', async function () {
     const name = prompt('Nama file (boleh dengan folder, contoh: src/app.js):');
     if (!name) return;
     const clean = name.trim().replace(/^\/+/, '');
     if (!clean) return;
+
     const fullPath = state.currentDir ? state.currentDir + '/' + clean : clean;
+
+    const check = await api('exists', { path: fullPath });
+    if (check.ok && check.exists) {
+      const overwrite = await confirmModal({
+        title: 'File Sudah Ada',
+        message: '<b>' + escapeHtml(fullPath) + '</b> sudah ada. Timpa dengan yang baru?',
+        icon: 'alert-triangle',
+        okText: 'Timpa',
+        danger: true
+      });
+      if (!overwrite) {
+        openFile(fullPath);
+        return;
+      }
+    }
+
     state.currentFile = fullPath;
     state.currentSha = null;
     el.currentPath.textContent = fullPath;
@@ -556,10 +1669,13 @@
     el.saveBtn.disabled = false;
     el.deleteBtn.disabled = true;
     el.editor.focus();
-    toast('Isi konten lalu klik Simpan');
+    toast('Isi konten lalu klik Simpan', 'info');
+    renderList();
   });
 
-  // ============ BACK / REFRESH ============
+  // ============================================================
+  // BACK / REFRESH
+  // ============================================================
   el.backBtn.addEventListener('click', function () {
     if (!state.currentDir) return;
     const parts = state.currentDir.split('/').filter(Boolean);
@@ -571,7 +1687,9 @@
     loadList(state.currentDir);
   });
 
-  // ============ CTRL+S ============
+  // ============================================================
+  // CTRL+S
+  // ============================================================
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
@@ -579,7 +1697,176 @@
     }
   });
 
+  // ============================================================
+  // MAINTENANCE — STATUS CHECK
+  // ============================================================
+  async function updateStatus() {
+    const target = el.targetPath.value.trim() || 'index.html';
+    const backup = backupNameFor(target);
+
+    el.backupPathLabel.textContent = backup;
+    el.statusText.textContent = 'Memeriksa...';
+    el.statusPill.className = 'status-pill';
+    el.statusPill.innerHTML = '<div class="spinner" style="width:10px;height:10px;border-width:1.5px"></div><span>Checking</span>';
+
+    const r = await api('exists', { path: target });
+    if (!r.ok) {
+      el.statusText.textContent = 'Gagal cek status';
+      el.statusPill.className = 'status-pill offline';
+      el.statusPill.innerHTML = '<span class="status-dot"></span><span>Error</span>';
+      return;
+    }
+
+    if (!r.exists) {
+      el.statusText.textContent = 'File target tidak ditemukan di repo';
+      el.statusPill.className = 'status-pill offline';
+      el.statusPill.innerHTML = '<span class="status-dot"></span><span>Target missing</span>';
+      return;
+    }
+
+    // Cek backup
+    const b = await api('exists', { path: backup });
+
+    if (b.ok && b.exists) {
+      el.statusText.textContent = 'Backup tersedia — siap restore';
+      el.statusPill.className = 'status-pill';
+      el.statusPill.innerHTML = '<span class="status-dot"></span><span>Backup found</span>';
+      el.restoreBtn.disabled = false;
+    } else {
+      el.statusText.textContent = 'File target OK, belum ada backup';
+      el.statusPill.className = 'status-pill offline';
+      el.statusPill.innerHTML = '<span class="status-dot"></span><span>No backup</span>';
+      el.restoreBtn.disabled = true;
+    }
+  }
+
+  el.targetPath.addEventListener('blur', updateStatus);
+  el.targetPath.addEventListener('change', updateStatus);
+
+  function backupNameFor(path) {
+    const p = (path || 'index.html').replace(/^\/+/, '');
+    const parts = p.split('/');
+    const last = parts.pop();
+    const dir = parts.length ? parts.join('/') + '/' : '';
+    const dot = last.lastIndexOf('.');
+    if (dot === -1) return dir + last + '.backup';
+    return dir + last.slice(0, dot) + '.backup' + last.slice(dot);
+  }
+
+  // ============================================================
+  // MAINTENANCE — ACTIVATE
+  // ============================================================
+  el.maintenanceBtn.addEventListener('click', async function () {
+    const target = (el.targetPath.value.trim() || 'index.html').replace(/^\/+/, '');
+    const backup = backupNameFor(target);
+
+    const ok = await confirmModal({
+      title: 'Aktifkan Maintenance',
+      message:
+        'File <b>' + escapeHtml(target) + '</b> akan diganti dengan halaman maintenance.<br><br>' +
+        'File lama akan disimpan sebagai <b>' + escapeHtml(backup) + '</b>.',
+      icon: 'power',
+      okText: 'Aktifkan',
+      danger: true
+    });
+    if (!ok) return;
+
+    el.maintenanceBtn.disabled = true;
+    el.maintenanceBtn.innerHTML = '<div class="spinner"></div><span>Memproses...</span>';
+
+    try {
+      // 1. Fetch maintenance html dari /maintenance.html
+      const res = await fetch('/maintenance.html?t=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('File /maintenance.html tidak ditemukan. Buat file itu dulu di folder public/.');
+      const maintContent = await res.text();
+
+      // 2. Baca file target (current)
+      const cur = await api('read', { path: target });
+      if (!cur.ok) throw new Error('Gagal baca file target: ' + (cur.error || ''));
+
+      // 3. Backup dulu
+      const b = await api('write', {
+        path: backup,
+        content: cur.content,
+        message: 'Backup ' + target + ' sebelum maintenance'
+      });
+      if (!b.ok) throw new Error('Gagal bikin backup: ' + (b.error || ''));
+
+      // 4. Tulis maintenance html ke target
+      const w = await api('write', {
+        path: target,
+        content: maintContent,
+        message: 'Aktifkan maintenance mode pada ' + target
+      });
+      if (!w.ok) throw new Error('Gagal tulis maintenance: ' + (w.error || ''));
+
+      toast('Maintenance aktif. Tunggu deploy otomatis.', 'success');
+      await updateStatus();
+      loadList(state.currentDir);
+    } catch (err) {
+      toast(err.message || 'Gagal aktifkan maintenance', 'error');
+    } finally {
+      el.maintenanceBtn.disabled = false;
+      el.maintenanceBtn.innerHTML =
+        '<i data-lucide="power"></i>' +
+        '<span>AKTIFKAN MAINTENANCE</span>' +
+        '<span class="sub">File lama akan di-backup otomatis</span>';
+      refreshIcons();
+    }
+  });
+
+  // ============================================================
+  // MAINTENANCE — RESTORE
+  // ============================================================
+  el.restoreBtn.addEventListener('click', async function () {
+    const target = (el.targetPath.value.trim() || 'index.html').replace(/^\/+/, '');
+    const backup = backupNameFor(target);
+
+    const ok = await confirmModal({
+      title: 'Restore dari Backup',
+      message:
+        'File <b>' + escapeHtml(target) + '</b> akan dipulihkan dari <b>' +
+        escapeHtml(backup) + '</b>.',
+      icon: 'rotate-ccw',
+      okText: 'Restore',
+      danger: false
+    });
+    if (!ok) return;
+
+    el.restoreBtn.disabled = true;
+    el.restoreBtn.innerHTML = '<div class="spinner"></div><span>Memproses...</span>';
+
+    try {
+      const b = await api('read', { path: backup });
+      if (!b.ok) throw new Error('Backup tidak ditemukan');
+
+      const w = await api('write', {
+        path: target,
+        content: b.content,
+        message: 'Restore ' + target + ' dari backup'
+      });
+      if (!w.ok) throw new Error('Gagal restore: ' + (w.error || ''));
+
+      toast('Restore berhasil. Tunggu deploy otomatis.', 'success');
+      await updateStatus();
+      loadList(state.currentDir);
+    } catch (err) {
+      toast(err.message || 'Gagal restore', 'error');
+    } finally {
+      el.restoreBtn.disabled = false;
+      el.restoreBtn.innerHTML = '<i data-lucide="rotate-ccw"></i><span>Restore dari Backup</span>';
+      refreshIcons();
+      updateStatus();
+    }
+  });
+
+  // ============================================================
+  // INIT ICONS
+  // ============================================================
+  window.addEventListener('load', refreshIcons);
+  refreshIcons();
+
 })();
 </script>
 </body>
-      </html>
+       </html>
