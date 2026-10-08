@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fortech Panel</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+  }
+  .hidden { display: none !important; }
+
+  /* LOGIN */
+  #loginView {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .login-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 40px 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .login-card h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: #58a6ff;
+  }
+  .login-card p.sub {
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 24px;
+  }
+  .login-card label {
+    display: block;
+    font-size: 13px;
+    color: #8b949e;
+    margin-bottom: 6px;
+  }
+  .login-card input {
+    width: 100%;
+    padding: 10px 12px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    font-size: 14px;
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .login-card input:focus { border-color: #58a6ff; }
+  .login-card button {
+    width: 100%;
+    padding: 11px;
+    background: #238636;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .login-card button:hover { background: #2ea043; }
+  .login-card button:disabled { opacity: .6; cursor: not-allowed; }
+  .err {
+    color: #f85149;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
+
+  /* PANEL */
+  #panelView { display: flex; flex-direction: column; height: 100vh; }
+
+  header.topbar {
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  header.topbar h1 {
+    font-size: 16px;
+    color: #58a6ff;
+    font-weight: 700;
+  }
+  header.topbar .user {
+    font-size: 13px;
+    color: #8b949e;
+    margin-right: 12px;
+  }
+  .btn {
+    padding: 6px 12px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .btn:hover { background: #30363d; }
+  .btn.primary { background: #238636; border-color: #238636; }
+  .btn.primary:hover { background: #2ea043; }
+  .btn.danger { background: #da3633; border-color: #da3633; }
+  .btn.danger:hover { background: #f85149; }
+  .btn.ghost { background: transparent; }
+
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  aside.sidebar {
+    width: 280px;
+    background: #0d1117;
+    border-right: 1px solid #30363d;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  aside.sidebar .sidebar-head {
+    padding: 10px 12px;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    gap: 6px;
+  }
+  aside.sidebar .sidebar-head .btn { font-size: 12px; padding: 5px 8px; }
+  .filelist { padding: 6px; }
+  .fileitem {
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #c9d1d9;
+    word-break: break-all;
+  }
+  .fileitem:hover { background: #161b22; }
+  .fileitem.active { background: #1f6feb; color: white; }
+  .fileitem .icon { flex-shrink: 0; }
+
+  main.editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .editor-head {
+    padding: 10px 16px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .editor-head .path {
+    font-size: 13px;
+    color: #8b949e;
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .editor-head .actions { display: flex; gap: 6px; }
+  textarea#editor {
+    flex: 1;
+    width: 100%;
+    background: #0d1117;
+    color: #e6edf3;
+    border: none;
+    outline: none;
+    padding: 16px;
+    font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: none;
+  }
+  .empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #8b949e;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    transform: translateY(100px);
+    transition: transform .3s, opacity .3s;
+    opacity: 0;
+    z-index: 999;
+    max-width: 320px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { border-color: #238636; }
+  #toast.error { border-color: #da3633; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #30363d;
+    border-top-color: #58a6ff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 720px) {
+    aside.sidebar { width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginView">
+  <form class="login-card" id="loginForm">
+    <h1>Fortech Panel</h1>
+    <p class="sub">Masuk untuk mengelola repository</p>
+
+    <label for="username">Username</label>
+    <input id="username" type="text" autocomplete="username" required />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" required />
+
+    <button type="submit" id="loginBtn">Masuk</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+</div>
+
+<!-- ============ PANEL ============ -->
+<div id="panelView" class="hidden">
+  <header class="topbar">
+    <h1>⚡ Fortech Panel</h1>
+    <div style="display:flex;align-items:center">
+      <span class="user" id="userLabel"></span>
+      <button class="btn" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <button class="btn ghost" id="backBtn" title="Kembali">⬅</button>
+        <button class="btn ghost" id="refreshBtn" title="Refresh">↻</button>
+        <button class="btn primary" id="newBtn" style="flex:1">+ File</button>
+      </div>
+      <div class="filelist" id="fileList">
+        <div class="empty">Memuat...</div>
+      </div>
+    </aside>
+
+    <main class="editor">
+      <div class="editor-head">
+        <div class="path" id="currentPath">Tidak ada file dipilih</div>
+        <div class="actions">
+          <button class="btn danger" id="deleteBtn" disabled>Hapus</button>
+          <button class="btn primary" id="saveBtn" disabled>Simpan</button>
+        </div>
+      </div>
+      <textarea id="editor" spellcheck="false" placeholder="Pilih file dari kiri, atau buat file baru..."></textarea>
+    </main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const API = '/api/github';
+
+  const el = {
+    loginView: document.getElementById('loginView'),
+    panelView: document.getElementById('panelView'),
+    loginForm: document.getElementById('loginForm'),
+    loginBtn: document.getElementById('loginBtn'),
+    loginErr: document.getElementById('loginErr'),
+    username: document.getElementById('username'),
+    password: document.getElementById('password'),
+    userLabel: document.getElementById('userLabel'),
+    logoutBtn: document.getElementById('logoutBtn'),
+    backBtn: document.getElementById('backBtn'),
+    refreshBtn: document.getElementById('refreshBtn'),
+    newBtn: document.getElementById('newBtn'),
+    fileList: document.getElementById('fileList'),
+    currentPath: document.getElementById('currentPath'),
+    editor: document.getElementById('editor'),
+    saveBtn: document.getElementById('saveBtn'),
+    deleteBtn: document.getElementById('deleteBtn'),
+    toast: document.getElementById('toast')
+  };
+
+  const state = {
+    user: null,
+    currentDir: '',
+    currentFile: null,
+    currentSha: null,
+    items: []
+  };
+
+  // ============ HELPER ============
+  function toast(msg, type) {
+    el.toast.textContent = msg;
+    el.toast.className = 'show ' + (type || '');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () {
+      el.toast.className = '';
+    }, 2600);
+  }
+
+  async function api(action, extra) {
+    const payload = Object.assign({ action: action }, extra || {});
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(payload)
+    });
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      data = { ok: false, error: 'Respon server tidak valid' };
+    }
+    if (!res.ok && !data.error) data.error = 'HTTP ' + res.status;
+    return data;
+  }
+
+  // ============ LOGIN ============
+  el.loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    el.loginErr.textContent = '';
+    el.loginBtn.disabled = true;
+    el.loginBtn.textContent = 'Memproses...';
+
+    const r = await api('login', {
+      username: el.username.value,
+      password: el.password.value
+    });
+
+    el.loginBtn.disabled = false;
+    el.loginBtn.textContent = 'Masuk';
+
+    if (r.ok) {
+      state.user = el.username.value;
+      showPanel();
+    } else {
+      el.loginErr.textContent = r.error || 'Login gagal';
+    }
+  });
+
+  // ============ LOGOUT ============
+  el.logoutBtn.addEventListener('click', async function () {
+    await api('logout');
+    state.user = null;
+    state.currentFile = null;
+    state.currentSha = null;
+    el.editor.value = '';
+    el.currentPath.textContent = 'Tidak ada file dipilih';
+    el.panelView.classList.add('hidden');
+    el.loginView.classList.remove('hidden');
+    el.password.value = '';
+  });
+
+  // ============ CHECK SESSION ON LOAD ============
+  (async function () {
+    const r = await api('check');
+    if (r.ok && r.loggedIn) {
+      state.user = r.user;
+      showPanel();
+    }
+  })();
+
+  function showPanel() {
+    el.loginView.classList.add('hidden');
+    el.panelView.classList.remove('hidden');
+    el.userLabel.textContent = state.user || '';
+    loadList('');
+  }
+
+  // ============ LOAD FILE LIST ============
+  async function loadList(dir) {
+    state.currentDir = dir || '';
+    el.fileList.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
+    const r = await api('list', { path: state.currentDir });
+
+    if (!r.ok) {
+      el.fileList.innerHTML = '<div class="empty">Gagal memuat: ' + (r.error || '') + '</div>';
+      return;
+    }
+
+    state.items = r.items || [];
+    renderList();
+  }
+
+  function renderList() {
+    const items = state.items.slice().sort(function (a, b) {
+      if (a.type === b.type) return a.name.localeCompare(b.name);
+      return a.type === 'dir' ? -1 : 1;
+    });
+
+    el.fileList.innerHTML = '';
+
+    if (state.currentDir) {
+      const up = document.createElement('div');
+      up.className = 'fileitem';
+      up.innerHTML = '<span class="icon">↩</span><span>..</span>';
+      up.addEventListener('click', function () {
+        const parts = state.currentDir.split('/').filter(Boolean);
+        parts.pop();
+        loadList(parts.join('/'));
+      });
+      el.fileList.appendChild(up);
+    }
+
+    if (items.length === 0 && !state.currentDir) {
+      el.fileList.innerHTML = '<div class="empty">Folder kosong</div>';
+      return;
+    }
+
+    items.forEach(function (item) {
+      const div = document.createElement('div');
+      div.className = 'fileitem';
+      const icon = item.type === 'dir' ? '📁' : '📄';
+      div.innerHTML = '<span class="icon">' + icon + '</span><span>' + escapeHtml(item.name) + '</span>';
+
+      if (state.currentFile === item.path) div.classList.add('active');
+
+      div.addEventListener('click', function () {
+        if (item.type === 'dir') {
+          loadList(item.path);
+        } else {
+          openFile(item.path);
+        }
+      });
+
+      el.fileList.appendChild(div);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // ============ OPEN FILE ============
+  async function openFile(path) {
+    el.editor.value = '';
+    el.editor.placeholder = 'Memuat...';
+    el.currentPath.textContent = path;
+    const r = await api('read', { path: path });
+    el.editor.placeholder = 'Pilih file dari kiri, atau buat file baru...';
+
+    if (!r.ok) {
+      toast('Gagal buka: ' + (r.error || ''), 'error');
+      el.currentPath.textContent = 'Tidak ada file dipilih';
+      return;
+    }
+
+    state.currentFile = path;
+    state.currentSha = r.sha;
+    el.editor.value = r.content;
+    el.saveBtn.disabled = false;
+    el.deleteBtn.disabled = false;
+    renderList();
+  }
+
+  // ============ SAVE FILE ============
+  el.saveBtn.addEventListener('click', async function () {
+    if (!state.currentFile) return;
+    el.saveBtn.disabled = true;
+    el.saveBtn.textContent = 'Menyimpan...';
+
+    const r = await api('write', {
+      path: state.currentFile,
+      content: el.editor.value
+    });
+
+    el.saveBtn.disabled = false;
+    el.saveBtn.textContent = 'Simpan';
+
+    if (r.ok) {
+      toast('Tersimpan ✓', 'success');
+      loadList(state.currentDir);
+    } else {
+      toast('Gagal simpan: ' + (r.error || ''), 'error');
+    }
+  });
+
+  // ============ DELETE FILE ============
+  el.deleteBtn.addEventListener('click', async function () {
+    if (!state.currentFile) return;
+    if (!confirm('Yakin hapus file "' + state.currentFile + '"?')) return;
+
+    el.deleteBtn.disabled = true;
+    const r = await api('delete', { path: state.currentFile });
+    el.deleteBtn.disabled = false;
+
+    if (r.ok) {
+      toast('Terhapus ✓', 'success');
+      state.currentFile = null;
+      state.currentSha = null;
+      el.editor.value = '';
+      el.currentPath.textContent = 'Tidak ada file dipilih';
+      el.saveBtn.disabled = true;
+      el.deleteBtn.disabled = true;
+      loadList(state.currentDir);
+    } else {
+      toast('Gagal hapus: ' + (r.error || ''), 'error');
+    }
+  });
+
+  // ============ NEW FILE ============
+  el.newBtn.addEventListener('click', function () {
+    const name = prompt('Nama file (boleh dengan folder, contoh: src/app.js):');
+    if (!name) return;
+    const clean = name.trim().replace(/^\/+/, '');
+    if (!clean) return;
+    const fullPath = state.currentDir ? state.currentDir + '/' + clean : clean;
+    state.currentFile = fullPath;
+    state.currentSha = null;
+    el.currentPath.textContent = fullPath;
+    el.editor.value = '';
+    el.saveBtn.disabled = false;
+    el.deleteBtn.disabled = true;
+    el.editor.focus();
+    toast('Isi konten lalu klik Simpan');
+  });
+
+  // ============ BACK / REFRESH ============
+  el.backBtn.addEventListener('click', function () {
+    if (!state.currentDir) return;
+    const parts = state.currentDir.split('/').filter(Boolean);
+    parts.pop();
+    loadList(parts.join('/'));
+  });
+
+  el.refreshBtn.addEventListener('click', function () {
+    loadList(state.currentDir);
+  });
+
+  // ============ CTRL+S ============
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (!el.saveBtn.disabled) el.saveBtn.click();
+    }
+  });
+
+})();
+</script>
+</body>
+      </html>
