@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#08090c" />
+<title>Maintenance</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* =============================================================
+   RESET & LOCK
+   ============================================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  overscroll-behavior: none;
+}
+
+:root {
+  --bg: #08090c;
+  --text: #e8eaef;
+  --text-soft: #9aa0ad;
+  --text-mute: #5a616e;
+  --accent: #4dd0e1;
+  --line: #1e222b;
+  --surface: #12141a;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* =============================================================
+   SUBTLE BG
+   ============================================================= */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 40%,
+      rgba(77, 208, 225, 0.06),
+      transparent 65%);
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000 25%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000 25%, transparent 80%);
+}
+
+@media (max-width: 768px) {
+  .bg-grid { display: none; }
+}
+
+/* =============================================================
+   STAGE
+   ============================================================= */
+.stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  text-align: center;
+  opacity: 0;
+  animation: stageIn 0.9s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes stageIn {
+  to { opacity: 1; }
+}
+
+/* =============================================================
+   ROBOT SCENE
+   ============================================================= */
+.scene {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1 / 0.85;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Ground line */
+.ground {
+  stroke: var(--line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* Base shadow */
+.shadow {
+  fill: rgba(77, 208, 225, 0.06);
+}
+
+/* Machine body (right side) */
+.machine-body {
+  fill: var(--surface);
+  stroke: #2a2f3a;
+  stroke-width: 1.8;
+}
+
+.machine-screen {
+  fill: #0d0f14;
+  stroke: #2a2f3a;
+  stroke-width: 1.5;
+}
+
+.machine-screen-line {
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  opacity: 0.7;
+  animation: screenBlink 2s ease-in-out infinite;
+}
+
+@keyframes screenBlink {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 0.25; }
+}
+
+.machine-vent {
+  stroke: #2a2f3a;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* Gear on machine */
+.gear-outer {
+  fill: #1a1d24;
+  stroke: #2a2f3a;
+  stroke-width: 1.5;
+}
+
+.gear-inner {
+  fill: #0d0f14;
+}
+
+.gear-hub {
+  fill: var(--accent);
+  opacity: 0.85;
+}
+
+#gearRotate {
+  transform-origin: 0 0;
+  transform-box: fill-box;
+  animation: gearSpin 6s linear infinite;
+}
+
+@keyframes gearSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Robot body (left side) */
+.robot-body {
+  fill: var(--surface);
+  stroke: #2a2f3a;
+  stroke-width: 1.8;
+}
+
+.robot-head {
+  fill: var(--surface);
+  stroke: #2a2f3a;
+  stroke-width: 1.8;
+}
+
+.robot-visor {
+  fill: #0d0f14;
+  stroke: #2a2f3a;
+  stroke-width: 1.5;
+}
+
+.robot-eye {
+  fill: var(--accent);
+  animation: eyeBlink 3.5s ease-in-out infinite;
+}
+
+@keyframes eyeBlink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  92%, 96%      { transform: scaleY(0.1); }
+}
+
+.robot-eye {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.robot-antenna {
+  stroke: #2a2f3a;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.robot-antenna-tip {
+  fill: var(--accent);
+  animation: tipPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes tipPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.robot-arm {
+  stroke: #2a2f3a;
+  stroke-width: 6;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.robot-hand {
+  fill: var(--accent);
+  opacity: 0.9;
+}
+
+/* Wrench in hand */
+.wrench {
+  transform-origin: 0 0;
+  transform-box: fill-box;
+  animation: wrenchSwing 1.6s ease-in-out infinite;
+}
+
+@keyframes wrenchSwing {
+  0%, 100% { transform: rotate(-14deg); }
+  50%      { transform: rotate(14deg); }
+}
+
+.wrench-line {
+  stroke: #c8ccd4;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.wrench-head {
+  fill: #c8ccd4;
+}
+
+/* Whole robot bob */
+.robot-bob {
+  animation: bob 2.4s ease-in-out infinite;
+  transform-origin: center bottom;
+  transform-box: fill-box;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
+/* Sparks */
+.spark {
+  fill: var(--accent);
+  opacity: 0;
+}
+
+.spark.s1 { animation: spark 1.6s ease-out infinite; }
+.spark.s2 { animation: spark 1.6s ease-out 0.1s infinite; }
+.spark.s3 { animation: spark 1.6s ease-out 0.2s infinite; }
+.spark.s4 { animation: spark 1.6s ease-out 0.15s infinite; }
+
+@keyframes spark {
+  0%   { opacity: 0; transform: translate(0, 0) scale(1); }
+  15%  { opacity: 1; transform: translate(0, 0) scale(1.4); }
+  100% { opacity: 0; transform: translate(var(--sx, 6px), var(--sy, -8px)) scale(0.3); }
+}
+
+.spark.s1 { --sx: 8px;  --sy: -10px; }
+.spark.s2 { --sx: -6px; --sy: -12px; }
+.spark.s3 { --sx: 4px;  --sy: -14px; }
+.spark.s4 { --sx: -3px; --sy: -8px; }
+
+/* Smoke from machine */
+.smoke {
+  fill: none;
+  stroke: #3a3f4a;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.smoke.sm1 { animation: smoke 3s ease-out infinite; }
+.smoke.sm2 { animation: smoke 3s ease-out 1s infinite; }
+.smoke.sm3 { animation: smoke 3s ease-out 2s infinite; }
+
+@keyframes smoke {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  20%  { opacity: 0.5; }
+  100% { opacity: 0; transform: translate(4px, -22px) scale(1.2); }
+}
+
+/* Floating dots around scene */
+.dot-float {
+  fill: var(--accent);
+  opacity: 0.25;
+}
+
+.dot-float.d1 { animation: floatDot 4s ease-in-out infinite; }
+.dot-float.d2 { animation: floatDot 5s ease-in-out 1s infinite; }
+.dot-float.d3 { animation: floatDot 6s ease-in-out 2s infinite; }
+
+@keyframes floatDot {
+  0%, 100% { transform: translate(0, 0); opacity: 0.15; }
+  50%      { transform: translate(0, -6px); opacity: 0.4; }
+}
+
+/* =============================================================
+   TEXT
+   ============================================================= */
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.title {
+  font-weight: 800;
+  font-size: clamp(1.1rem, 4.5vw, 1.55rem);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.title .line {
+  display: block;
+}
+
+.title .accent {
+  background: linear-gradient(100deg, #4dd0e1, #7c9fff, #b788ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradShift 6s ease-in-out infinite;
+  font-weight: 800;
+}
+
+@keyframes gradShift {
+  0%, 100% { background-position: 0% center; }
+  50%      { background-position: 100% center; }
+}
+
+.divider {
+  width: 40px;
+  height: 2px;
+  background: var(--line);
+  border-radius: 2px;
+  margin: 2px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-100%);
+  animation: dividerSlide 2.5s ease-in-out infinite;
+}
+
+@keyframes dividerSlide {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.72rem, 2.6vw, 0.85rem);
+  color: var(--text-mute);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.6s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+/* =============================================================
+   SMALL SCREENS
+   ============================================================= */
+@media (max-width: 480px) {
+  .stage {
+    gap: 30px;
+  }
+
+  .scene {
+    max-width: 280px;
+  }
+
+  .title {
+    font-size: clamp(1rem, 5vw, 1.3rem);
+  }
+}
+
+@media (max-height: 620px) {
+  .stage {
+    gap: 24px;
+  }
+
+  .scene {
+    max-width: 240px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-grid"></div>
+
+<main class="stage" role="main">
+
+  <!-- ============================================================
+       ROBOT SCENE
+       ============================================================ -->
+  <div class="scene" aria-hidden="true">
+    <svg viewBox="0 0 340 290" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Ground -->
+      <line class="ground" x1="30" y1="255" x2="310" y2="255" />
+
+      <!-- Base shadows -->
+      <ellipse class="shadow" cx="100" cy="256" rx="46" ry="5" />
+      <ellipse class="shadow" cx="240" cy="256" rx="52" ry="5" />
+
+      <!-- Floating dots -->
+      <circle class="dot-float d1" cx="60"  cy="70"  r="2" />
+      <circle class="dot-float d2" cx="290" cy="90"  r="2.5" />
+      <circle class="dot-float d3" cx="170" cy="40"  r="2" />
+
+      <!-- ============ MACHINE (right) ============ -->
+      <g>
+        <!-- Smoke -->
+        <path class="smoke sm1" d="M255 78 q-4 -8 0 -14 q4 -6 0 -12" />
+        <path class="smoke sm2" d="M268 78 q-4 -8 0 -14 q4 -6 0 -12" />
+        <path class="smoke sm3" d="M243 78 q-4 -8 0 -14 q4 -6 0 -12" />
+
+        <!-- Machine body -->
+        <rect class="machine-body" x="195" y="140" width="90" height="115" rx="10" />
+
+        <!-- Top vent -->
+        <line class="machine-vent" x1="205" y1="152" x2="225" y2="152" />
+        <line class="machine-vent" x1="205" y1="158" x2="225" y2="158" />
+        <line class="machine-vent" x1="205" y1="164" x2="225" y2="164" />
+
+        <!-- Screen -->
+        <rect class="machine-screen" x="235" y="150" width="42" height="26" rx="4" />
+        <line class="machine-screen-line" x1="241" y1="158" x2="269" y2="158" />
+        <line class="machine-screen-line" x1="241" y1="165" x2="259" y2="165" />
+
+        <!-- Gear area (bottom-right of machine) -->
+        <g transform="translate(255, 220)">
+          <g id="gearRotate">
+            <!-- Outer gear with teeth -->
+            <path class="gear-outer" d="
+              M 0 -22
+              l 3.5 3.5 l 5 -1.5 l 1.5 5 l 5 1.5 l -1.5 5 l 3.5 3.5
+              l -3.5 3.5 l 1.5 5 l -5 1.5 l -1.5 5 l -5 -1.5 l -3.5 3.5
+              l -3.5 -3.5 l -5 1.5 l -1.5 -5 l -5 -1.5 l 1.5 -5 l -3.5 -3.5
+              l 3.5 -3.5 l -1.5 -5 l 5 -1.5 l 1.5 -5 l 5 1.5 z" />
+            <circle class="gear-inner" cx="0" cy="0" r="12" />
+            <circle class="gear-hub" cx="0" cy="0" r="4" />
+          </g>
+        </g>
+
+        <!-- Bolts -->
+        <circle cx="205" cy="245" r="2.5" fill="#2a2f3a" />
+        <circle cx="205" cy="145" r="2.5" fill="#2a2f3a" />
+      </g>
+
+      <!-- ============ ROBOT (left) ============ -->
+      <g class="robot-bob">
+
+        <!-- Antenna -->
+        <line class="robot-antenna" x1="100" y1="70" x2="100" y2="92" />
+        <circle class="robot-antenna-tip" cx="100" cy="66" r="3.5" />
+
+        <!-- Head -->
+        <rect class="robot-head" x="70" y="92" width="60" height="48" rx="10" />
+
+        <!-- Visor -->
+        <rect class="robot-visor" x="78" y="104" width="44" height="22" rx="6" />
+
+        <!-- Eyes -->
+        <circle class="robot-eye" cx="92"  cy="115" r="3.2" />
+        <circle class="robot-eye" cx="108" cy="115" r="3.2" />
+
+        <!-- Neck -->
+        <rect x="94" y="140" width="12" height="6" fill="#2a2f3a" />
+
+        <!-- Body -->
+        <rect class="robot-body" x="62" y="146" width="76" height="72" rx="10" />
+
+        <!-- Chest light -->
+        <circle class="robot-eye" cx="100" cy="180" r="4" />
+
+        <!-- Chest panel lines -->
+        <line class="machine-vent" x1="78" y1="196" x2="122" y2="196" />
+        <line class="machine-vent" x1="78" y1="204" x2="108" y2="204" />
+
+        <!-- Left arm (static, resting) -->
+        <path class="robot-arm" d="M 62 165 q -14 2 -14 20" />
+        <circle class="robot-hand" cx="48" cy="188" r="4.5" />
+
+        <!-- Right arm (extended to machine) with wrench -->
+        <g transform="translate(138, 175)">
+          <!-- Upper arm -->
+          <path class="robot-arm" d="M 0 0 Q 20 4 34 12" />
+
+          <!-- Forearm + wrench group with swing -->
+          <g class="wrench" transform="translate(34, 12)">
+            <!-- Forearm -->
+            <path class="robot-arm" d="M 0 0 Q 10 2 16 6" />
+
+            <!-- Hand holding wrench -->
+            <circle class="robot-hand" cx="16" cy="6" r="4.5" />
+
+            <!-- Wrench -->
+            <g transform="translate(16, 6)">
+              <line class="wrench-line" x1="0" y1="0" x2="14" y2="6" />
+              <!-- Open-end head -->
+              <path class="wrench-head" d="
+                M 14 2
+                L 20 5
+                L 18 6
+                L 20 7
+                L 14 10
+                L 13 6 Z" />
+            </g>
+
+            <!-- Sparks at contact point -->
+            <g transform="translate(36, 14)">
+              <circle class="spark s1" cx="0" cy="0" r="1.8" />
+              <circle class="spark s2" cx="0" cy="0" r="1.5" />
+              <circle class="spark s3" cx="0" cy="0" r="1.5" />
+              <circle class="spark s4" cx="0" cy="0" r="1.8" />
+            </g>
+          </g>
+        </g>
+
+        <!-- Feet -->
+        <rect x="70" y="220" width="18" height="8" rx="3" fill="#2a2f3a" />
+        <rect x="112" y="220" width="18" height="8" rx="3" fill="#2a2f3a" />
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       TEXT
+       ============================================================ -->
+  <div class="text">
+    <h1 class="title">
+      <span class="line">Maaf website sedang</span>
+      <span class="line accent">maintenance</span>
+    </h1>
+
+    <div class="divider"></div>
+
+    <p class="subtitle">
+      Mohon tunggu<span class="loading-dots"></span>
+    </p>
+  </div>
+
+</main>
+
+<script>
+/* =============================================================
+   LOCK GESTURES
+   ============================================================= */
+(function () {
+  'use strict';
+
+  // Pinch zoom
+  document.addEventListener('gesturestart', e => e.preventDefault());
+
+  // Double tap zoom
+  let lastTouch = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouch <= 300) e.preventDefault();
+    lastTouch = now;
+  }, { passive: false });
+
+  // Block all touchmove (gak ada yang perlu di-scroll)
+  document.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+  }, { passive: false });
+
+  // Block context menu di mobile
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+
+})();
+</script>
+</body>
+  </html>
