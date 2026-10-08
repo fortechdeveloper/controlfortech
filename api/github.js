@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const GH_API = 'https://api.github.com';
-const SESSION_TTL = 24 * 60 * 60 * 1000; // 24 jam
+const SESSION_TTL = 24 * 60 * 60 * 1000;
 
 function sign(data) {
   return crypto
@@ -93,7 +93,6 @@ module.exports = async function handler(req, res) {
   const action = body.action;
   const cookies = parseCookies(req);
 
-  // ============ LOGIN ============
   if (action === 'login') {
     const username = (body.username || '').trim();
     const password = (body.password || '').trim();
@@ -116,7 +115,6 @@ module.exports = async function handler(req, res) {
       .json({ ok: false, error: 'Username atau password salah' });
   }
 
-  // ============ LOGOUT ============
   if (action === 'logout') {
     res.setHeader(
       'Set-Cookie',
@@ -125,13 +123,11 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  // ============ CHECK SESSION ============
   if (action === 'check') {
     const user = verifyToken(cookies.session);
     return res.status(200).json({ ok: true, loggedIn: !!user, user: user });
   }
 
-  // ============ PROTECTED AREA ============
   const user = verifyToken(cookies.session);
   if (!user) {
     return res.status(401).json({ ok: false, error: 'Belum login' });
@@ -143,7 +139,6 @@ module.exports = async function handler(req, res) {
   const base = '/repos/' + owner + '/' + repo + '/contents';
 
   try {
-    // ============ LIST ============
     if (action === 'list') {
       const path = (body.path || '').replace(/^\/+/, '');
       const r = await ghFetch(base + '/' + path + '?ref=' + branch);
@@ -167,7 +162,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // ============ READ ============
     if (action === 'read') {
       const path = (body.path || '').replace(/^\/+/, '');
       if (!path) {
@@ -177,12 +171,10 @@ module.exports = async function handler(req, res) {
       if (!r.ok) {
         return res
           .status(r.status)
-          .json({ ok: false, error: r.data.message || 'Gagal membaca file' });
+          .json({ ok: false, error: r.data.message || 'File tidak ditemukan' });
       }
       if (r.data.type !== 'file') {
-        return res
-          .status(400)
-          .json({ ok: false, error: 'Bukan file' });
+        return res.status(400).json({ ok: false, error: 'Bukan file' });
       }
       const content = Buffer.from(r.data.content || '', 'base64').toString(
         'utf-8'
@@ -195,7 +187,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // ============ WRITE ============
     if (action === 'write') {
       const path = (body.path || '').replace(/^\/+/, '');
       const content = body.content || '';
@@ -227,7 +218,6 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    // ============ DELETE ============
     if (action === 'delete') {
       const path = (body.path || '').replace(/^\/+/, '');
       if (!path) {
@@ -253,6 +243,13 @@ module.exports = async function handler(req, res) {
           .json({ ok: false, error: r.data.message || 'Gagal menghapus' });
       }
       return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'exists') {
+      const path = (body.path || '').replace(/^\/+/, '');
+      if (!path) return res.status(400).json({ ok: false, error: 'Path kosong' });
+      const g = await ghFetch(base + '/' + path + '?ref=' + branch);
+      return res.status(200).json({ ok: true, exists: g.ok });
     }
 
     return res.status(400).json({ ok: false, error: 'Action tidak dikenal' });
